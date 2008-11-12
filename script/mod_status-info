@@ -1,0 +1,123 @@
+#!/usr/bin/perl
+
+=head1 NAME
+
+mod_status-info - return apache mod_status information in different formats
+
+=head1 SYNOPSIS
+
+    mod_status-info [--type xml|data-dumper|ecsv|yaml|json|rrd] [url]
+    
+        --type     sets the type of the input in which the data should be shown
+                   by default is xml
+
+=head1 DESCRIPTION
+
+Script fetches mod_status generated page and return the information that were
+found there in different formats that can be used for logging, parsing, archiving,
+further processing.
+
+rrd output has this values:
+
+    total_accesses
+    total_traffic
+    current_requests
+    idle_workers
+
+=cut
+
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Pod::Usage;
+use Data::Dumper 'Dumper';
+
+use FindBin '$Bin';
+use lib $Bin.'/../lib';
+
+use Data::Apache::mod_status;
+
+exit main();
+
+sub main {
+    my $help;
+    my $info_type = 'xml';
+    my $url;
+    GetOptions(
+        'help|h'   => \$help,
+        'type|t=s' => \$info_type,
+    ) or pod2usage;
+    pod2usage if $help;
+    
+    $url = shift @ARGV;
+    pod2usage if not $url;
+    
+    my $mod_status = Data::Apache::mod_status->new(
+        'url' => $url,
+    )->refresh;
+    my $info = $mod_status->info;
+    
+    my %info_hash = (
+        'server_version'           => $info->server_version,
+        'server_build_str'         => $info->server_build_str,
+        'current_time_str'         => $info->current_time_str,
+        'restart_time_str'         => $info->restart_time_str,
+        'parent_server_generation' => $info->parent_server_generation,
+        'server_uptime_str'        => $info->server_uptime_str,
+        'total_accesses'           => $info->total_accesses,
+        'total_traffic_str'        => $info->total_traffic_str,
+        'cpu_usage_str'            => $info->cpu_usage_str,
+        'current_requests'         => $info->current_requests,
+        'idle_workers'             => $info->idle_workers,
+    );
+    
+    if ($info_type eq 'xml') {
+        print $mod_status->xml_dom->toString(1);
+    }
+    elsif ($info_type eq 'data-dumper') {
+        print Dumper(\%info_hash);
+    }
+    elsif ($info_type eq 'ecsv') {
+        print join(';', map { '"'.$_.'='.$info_hash{$_}.'"' } sort keys %info_hash), "\n";
+    }
+    elsif ($info_type eq 'yaml') {
+        print '---', "\n";
+        foreach my $key (sort keys %info_hash) {
+            print $key, ': ', $info_hash{$key}, "\n";
+        }
+    }
+    elsif ($info_type eq 'json') {
+        print
+            '{',
+            join(
+                ',',
+                map {
+                    '"'.$_.'": "'.$info_hash{$_}.'"'
+                } sort keys %info_hash
+            ),
+            '}',
+            "\n"
+        ;
+    }
+    elsif ($info_type eq 'rrd') {
+        my $current_time_seconds = $info->current_time->epoch;
+        print
+            '-t total_accesses:total_traffic:current_requests:idle_workers ',
+            $current_time_seconds.':',
+            join ':',
+            (
+                $info->total_accesses,
+                $info->total_traffic,
+                $info->current_requests,
+                $info->idle_workers,
+            )
+        ;
+    }
+    else {
+        die 'Unknown output type "', $info_type, '"', "\n";
+    }
+    
+    return 0;
+}

@@ -1,0 +1,23 @@
+#!/bin/bash -x
+
+RRD_FILE=mod_status.rrd
+NOW=`date +%s`
+WIDTH=1000
+HEIGHT=350
+
+rrdtool graph \
+    apache-day.png \
+    --start '-1d' \
+    --end $NOW \
+    --width $WIDTH \
+    --height $HEIGHT \
+    --lower-limit 0 \
+    DEF:total_accesses=$RRD_FILE:total_accesses:AVERAGE \
+    'LINE:total_accesses#55FF55:Accesses' \
+    DEF:total_traffic=$RRD_FILE:total_traffic:AVERAGE \
+    'LINE:total_traffic#55AA55:Traffic' \
+    DEF:requests=$RRD_FILE:current_requests:AVERAGE \
+    'LINE:requests#555555:Requests' \
+    DEF:idle=$RRD_FILE:idle_workers:AVERAGE \
+    'LINE:idle#550055:Idle Workers' \
+

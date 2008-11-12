@@ -1,0 +1,22 @@
+#!/bin/bash -x
+
+RRD_FILE=$1
+URL=$2
+
+if [ ! "$URL" ]; then
+    URL=$1
+    RRD_FILE=mod_status.rrd
+fi
+
+if [ ! "$URL" ]; then
+    echo 'pass url as argument'
+    exit 1;
+fi
+
+if [ ! -e $RRD_FILE ]; then
+    ./create
+fi;
+
+rrdtool update \
+    $RRD_FILE \
+    `mod_status-info --type rrd $URL`
