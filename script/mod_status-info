@@ -85,7 +85,7 @@ sub main {
     elsif ($info_type eq 'yaml') {
         print '---', "\n";
         foreach my $key (sort keys %info_hash) {
-            print $key, ': ', $info_hash{$key}, "\n";
+            print $key, ': ', ($info_hash{$key} || q{}), "\n";
         }
     }
     elsif ($info_type eq 'json') {
@@ -94,7 +94,7 @@ sub main {
             join(
                 ',',
                 map {
-                    '"'.$_.'": "'.$info_hash{$_}.'"'
+                    '"'.$_.'": "'.($info_hash{$_} || q{}).'"'
                 } sort keys %info_hash
             ),
             '}',
@@ -107,6 +107,7 @@ sub main {
             '-t total_accesses:total_traffic:current_requests:idle_workers ',
             $current_time_seconds.':',
             join ':',
+            map { defined $_ ? $_ : 'U' }
             (
                 $info->total_accesses,
                 $info->total_traffic,

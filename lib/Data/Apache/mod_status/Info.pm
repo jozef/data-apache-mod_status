@@ -37,29 +37,29 @@ subtype 'DateTime' => as 'Object' => where { $_->isa('DateTime') };
 has 'server_version'           => ( 'is' => 'rw', 'isa' => 'Str', );
 has 'server_build_str'         => ( 'is' => 'rw', 'isa' => 'Str', );
 has 'server_build'             => ( 'is' => 'rw', 'isa' => 'DateTime',
-    'lazy' => 1,
+    'lazy'    => 1,
     'default' => sub { $build_datetime_parser->parse_datetime($_[0]->server_build_str) },
 );
 has 'current_time_str'         => ( 'is' => 'rw', 'isa' => 'Str', );
 has 'current_time'             => ( 'is' => 'rw', 'isa' => 'DateTime',
-    'lazy' => 1,
+    'lazy'    => 1,
     'default' => sub { $server_datetime_parser->parse_datetime($_[0]->current_time_str) },
 );
 has 'restart_time_str'         => ( 'is' => 'rw', 'isa' => 'Str', );
 has 'restart_time'             => ( 'is' => 'rw', 'isa' => 'DateTime',
-    'lazy' => 1,
+    'lazy'    => 1,
     'default' => sub { $server_datetime_parser->parse_datetime($_[0]->restart_time_str) },
 );
 has 'parent_server_generation' => ( 'is' => 'rw', 'isa' => 'Int', );
 has 'server_uptime_str'        => ( 'is' => 'rw', 'isa' => 'Str', );
 has 'server_uptime'            => ( 'is' => 'rw', 'isa' => 'Int',
-    'lazy' => 1,
+    'lazy'    => 1,
     'default' => sub { $_[0]->_server_uptime },
 );
 has 'total_accesses'           => ( 'is' => 'rw', 'isa' => 'Int', );
 has 'total_traffic_str'        => ( 'is' => 'rw', 'isa' => 'Str', );
-has 'total_traffic'            => ( 'is' => 'rw', 'isa' => 'Int',
-    'lazy' => 1,
+has 'total_traffic'            => ( 'is' => 'rw', 'isa' => 'Int|Undef',
+    'lazy'    => 1,
     'default' => sub { $_[0]->_total_traffic },
 );
 has 'cpu_usage_str'            => ( 'is' => 'rw', 'isa' => 'Str', );
@@ -91,6 +91,8 @@ sub _total_traffic {
     my $self = shift;
     
     my $traffic = $self->total_traffic_str;
+    return
+        if not defined $traffic;    
     die 'badly formated traffic string "', $traffic,'"'
         if $traffic !~ m/^(\d+(?:.\d)?) \s (kB|MB|GB|TB)$/xms;
     
