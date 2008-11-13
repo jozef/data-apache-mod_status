@@ -75,18 +75,22 @@ sub main {
         print $mod_status->xml_dom->toString(1);
     }
     elsif ($info_type eq 'data-dumper') {
+        # TODO add workers numbers
         print Dumper(\%info_hash);
     }
     elsif ($info_type eq 'ecsv') {
+        # TODO add workers numbers
         print join(';', map { '"'.$_.'='.$info_hash{$_}.'"' } sort keys %info_hash), "\n";
     }
     elsif ($info_type eq 'yaml') {
+        # TODO add workers numbers
         print '---', "\n";
         foreach my $key (sort keys %info_hash) {
             print $key, ': ', ($info_hash{$key} || q{}), "\n";
         }
     }
     elsif ($info_type eq 'json') {
+        # TODO add workers numbers
         print
             '{',
             join(
