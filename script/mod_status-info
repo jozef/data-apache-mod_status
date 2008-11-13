@@ -34,9 +34,6 @@ use Getopt::Long;
 use Pod::Usage;
 use Data::Dumper 'Dumper';
 
-use FindBin '$Bin';
-use lib $Bin.'/../lib';
-
 use Data::Apache::mod_status;
 
 exit main();
@@ -57,7 +54,8 @@ sub main {
     my $mod_status = Data::Apache::mod_status->new(
         'url' => $url,
     )->refresh;
-    my $info = $mod_status->info;
+    my $info    = $mod_status->info;
+    my $workers = $mod_status->workers;
     
     my %info_hash = (
         'server_version'           => $info->server_version,
@@ -104,7 +102,25 @@ sub main {
     elsif ($info_type eq 'rrd') {
         my $current_time_seconds = $info->current_time->epoch;
         print
-            '-t total_accesses:total_traffic:current_requests:idle_workers ',
+            '-t '.join(':', qw{
+                total_accesses
+                total_traffic
+                current_requests
+                idle_workers
+                
+                waiting
+                starting
+                reading
+                sending
+                keepalive
+                dns_lookup
+                closing
+                logging
+                finishing
+                idle_cleanup
+                open_slot
+            }),
+            q{ },
             $current_time_seconds.':',
             join ':',
             map { defined $_ ? $_ : 'U' }
@@ -113,6 +129,18 @@ sub main {
                 $info->total_traffic,
                 $info->current_requests,
                 $info->idle_workers,
+                
+                $workers->waiting,
+                $workers->starting,
+                $workers->reading,
+                $workers->sending,
+                $workers->keepalive,
+                $workers->dns_lookup,
+                $workers->closing,
+                $workers->logging,
+                $workers->finishing,
+                $workers->idle_cleanup,
+                $workers->open_slot,
             )
         ;
     }

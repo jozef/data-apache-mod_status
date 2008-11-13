@@ -190,7 +190,7 @@ sub _fetch_mod_status_page {
     return $response->decoded_content;
 }
 
-1;
+"Zed's Dead, baby";
 
 
 __END__
