@@ -25,6 +25,7 @@ use XML::LibXML;
 
 use Data::Apache::mod_status::2XML;
 use Data::Apache::mod_status::Info;
+use Data::Apache::mod_status::Workers;
 
 our $TEMPFILE_TEMPLATE = 'mod_status-XXXXXX';
 
@@ -36,6 +37,10 @@ our $TEMPFILE_TEMPLATE = 'mod_status-XXXXXX';
 subtype 'mod_status-Info' 
     => as 'Object'
     => where { $_[0]->isa('Data::Apache::mod_status::Info') };
+
+subtype 'mod_status-Workers'
+    => as 'Object'
+    => where { $_[0]->isa('Data::Apache::mod_status::Workers') };
 
 subtype 'XML-LibXML-Document'
     => as 'Object'
@@ -61,6 +66,11 @@ has 'xml_dom' => (
 has 'info' => (
     'is'      => 'rw',
     'isa'     => 'mod_status-Info'
+);
+
+has 'workers' => (
+    'is'      => 'rw',
+    'isa'     => 'mod_status-Workers'
 );
 
 =head1 METHODS
@@ -150,6 +160,13 @@ sub refresh_from_dom {
     
     # store new values
     $self->info($info);
+    
+    my ($workers_tag) = $dom->findnodes('/mod_status/workers');
+    $self->workers(
+        Data::Apache::mod_status::Workers->new(
+            'workers_tag' => $workers_tag,
+        )
+    );
     
     return $self;
 }

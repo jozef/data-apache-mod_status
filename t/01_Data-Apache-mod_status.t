@@ -24,7 +24,7 @@ sub main {
         if not defined which('tidy');
 
     #plan 'no_plan';
-    plan 'tests' => 18;
+    plan 'tests' => 30;
     
     throws_ok(sub { Data::Apache::mod_status->new()->refresh() }, qr/failed to fetch test/, 'check test mockup');
     
@@ -102,6 +102,21 @@ sub main {
     is($info->cpu_usage_str, 'u2.77 s2.6 cu0 cs0 - .028% CPU load', 'cpu usage string');
     is($info->current_requests, 3, 'current requests');
     is($info->idle_workers, 49, 'idle workers');
+    
+    my $workers = Data::Apache::mod_status->new->refresh->workers;
+    ok($workers->workers_tag, 'workers pre tag');
+    is($workers->waiting, 49, 'waiting workers');
+    is($workers->starting, 2, 'starting workers');
+    is($workers->reading, 3, 'reading workers');
+    is($workers->sending, 1, 'sending workers');
+    is($workers->keepalive, 4, 'keepalive workers');
+    is($workers->dns_lookup, 5, 'dns lookup workers');
+    is($workers->closing, 6, 'closing workers');
+    is($workers->logging, 7, 'logging workers');
+    is($workers->finishing, 8, 'finishing workers');
+    is($workers->idle_cleanup, 9, 'idle cleanup workers');
+    is($workers->open_slot, 930, 'open slot workers');
+    
     
     return 0;
 }
