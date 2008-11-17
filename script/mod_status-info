@@ -23,6 +23,17 @@ rrd output has this values:
     total_traffic
     current_requests
     idle_workers
+    waiting
+    starting
+    reading
+    sending
+    keepalive
+    dns_lookup
+    closing
+    logging
+    finishing
+    idle_cleanup
+    open_slot
 
 =cut
 
@@ -158,3 +169,21 @@ sub main {
     
     return 0;
 }
+
+__END__
+
+=head1 SEE ALSO
+
+L<examples/rrd/> folder for examples how to create, update and graph C<mod_status>
+data using L<Data::Apache::mod_status> and rrdtool.
+
+=head1 COPYRIGHT AND LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHOR
+
+Jozef Kutej
+
+=cut
