@@ -42,9 +42,11 @@ sub main {
     my $help;
     my $info_type = 'xml';
     my $url;
+    my $max_clients;
     GetOptions(
-        'help|h'   => \$help,
-        'type|t=s' => \$info_type,
+        'help|h'        => \$help,
+        'type|t=s'      => \$info_type,
+        'max-clients=s' => \$max_clients,
     ) or pod2usage;
     pod2usage if $help;
     
@@ -107,23 +109,24 @@ sub main {
         my $current_time_seconds = $info->current_time->epoch;
         print
             '-t '.join(':', qw{
-                total_accesses
-                total_traffic
-                current_requests
-                idle_workers
-                
-                waiting
-                starting
-                reading
-                sending
-                keepalive
-                dns_lookup
-                closing
-                logging
-                finishing
-                idle_cleanup
-                open_slot
-            }),
+                    total_accesses
+                    total_traffic
+                    current_requests
+                    idle_workers
+                    
+                    waiting
+                    starting
+                    reading
+                    sending
+                    keepalive
+                    dns_lookup
+                    closing
+                    logging
+                    finishing
+                    idle_cleanup
+                    open_slot
+                }, ($max_clients ? 'max_clients' : ())
+            ),
             q{ },
             $current_time_seconds.':',
             join ':',
@@ -145,6 +148,7 @@ sub main {
                 $workers->finishing,
                 $workers->idle_cleanup,
                 $workers->open_slot,
+                ($max_clients ? $max_clients : ())
             )
         ;
     }

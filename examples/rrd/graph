@@ -1,23 +1,69 @@
 #!/bin/bash -x
 
 RRD_FILE=mod_status.rrd
+
+if [ "$1" ]; then
+    RRD_FILE=$1
+fi
+
+MAX_CLIENTS=""
+if [ "$2" ]; then
+    MAX_CLIENTS="CDEF:max_clients=$2,0,+ AREA:max_clients#BBFFFF:MaxClients"
+fi
+
+BASE_FILE=`basename $RRD_FILE`
+
 NOW=`date +%s`
 WIDTH=1000
-HEIGHT=350
+HEIGHT=600
 
 rrdtool graph \
-    apache-day.png \
+    "${BASE_FILE}-req-day.png" \
     --start '-1d' \
     --end $NOW \
     --width $WIDTH \
     --height $HEIGHT \
     --lower-limit 0 \
     DEF:total_accesses=$RRD_FILE:total_accesses:AVERAGE \
-    'LINE:total_accesses#55FF55:Accesses' \
-    DEF:total_traffic=$RRD_FILE:total_traffic:AVERAGE \
-    'LINE:total_traffic#55AA55:Traffic' \
-    DEF:requests=$RRD_FILE:current_requests:AVERAGE \
-    'LINE:requests#555555:Requests' \
-    DEF:idle=$RRD_FILE:idle_workers:AVERAGE \
-    'LINE:idle#550055:Idle Workers' \
+    'LINE:total_accesses#FF0000:Total Accesses' \
+    DEF:requests=$RRD_FILE:current_requests:MAX \
+    'LINE:requests#A22222:Max Requests' \
+
+rrdtool graph \
+    "${BASE_FILE}-workers-day.png" \
+    --start '-1d' \
+    --end $NOW \
+    --width $WIDTH \
+    --height $HEIGHT \
+    --lower-limit 0 \
+    DEF:waiting=$RRD_FILE:waiting:MIN \
+    DEF:starting=$RRD_FILE:starting:MAX \
+    DEF:reading=$RRD_FILE:reading:MAX \
+    DEF:sending=$RRD_FILE:sending:MAX \
+    DEF:keepalive=$RRD_FILE:keepalive:MAX \
+    DEF:dns_lookup=$RRD_FILE:dns_lookup:MAX \
+    DEF:closing=$RRD_FILE:closing:MAX \
+    DEF:logging=$RRD_FILE:logging:MAX \
+    DEF:finishing=$RRD_FILE:finishing:MAX \
+    DEF:idle_cleanup=$RRD_FILE:idle_cleanup:MAX \
+    DEF:requests=$RRD_FILE:current_requests:MAX \
+    DEF:open_slot=$RRD_FILE:open_slot:MAX \
+    DEF:max_clients=$RRD_FILE:max_clients:MAX \
+    \
+    DEF:current_requests=$RRD_FILE:current_requests:MAX \
+    \
+    $MAX_CLIENTS \
+    \
+    'AREA:max_clients#FFFFAA:Max clients' \
+    'AREA:waiting#FFd2aa:Waiting' \
+    'AREA:current_requests#AABBFF:Occupied' \
+    'LINE2:reading#22A222:Reading' \
+    'LINE2:sending#2222A2:Sending' \
+    'LINE1:keepalive#50eae8:Keep-Alive' \
+    'LINE:starting#02F222:Starting' \
+    'LINE:dns_lookup#225222:DNS Lookup' \
+    'LINE:closing#222252:Closing' \
+    'LINE:logging#022222:Logging' \
+    'LINE:finishing#220222:Gracefully Finishing' \
+    'LINE:idle_cleanup#222202:Idle Cleanup' \
 

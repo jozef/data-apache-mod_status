@@ -7,7 +7,8 @@ if [ "$1" ]; then
 fi
 
 if [ ! -e $RRD_FILE ]; then
-    # one week 5 minutes mesurements
+    # one day  1 minute measurements
+    # one week 5 minutes measurements
     # one month hourly
     # one year 8h intervals
     rrdtool create \
@@ -28,6 +29,11 @@ if [ ! -e $RRD_FILE ]; then
         DS:finishing:GAUGE:180:0:99999999 \
         DS:idle_cleanup:GAUGE:180:0:99999999 \
         DS:open_slot:GAUGE:180:0:99999999 \
+        DS:max_clients:GAUGE:180:0:99999999 \
+        \
+        RRA:AVERAGE:0.5:1:1440 \
+        RRA:MAX:0.5:1:1440 \
+        RRA:MIN:0.5:1:1440 \
         \
         RRA:AVERAGE:0.5:5:2016 \
         RRA:MAX:0.5:5:2016 \
