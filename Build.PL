@@ -19,6 +19,8 @@ my $builder = Module::Build->new(
         'IPC::Run3'      => 0,
         'XML::LibXSLT'   => 0,
         'XML::LibXML'    => 0,
+        'DateTime::Format::Strptime'
+                         => 0,
     },
     build_requires => {
         'Test::More'        => 0,

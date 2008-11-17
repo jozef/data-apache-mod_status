@@ -12,8 +12,6 @@
     encoding="UTF-8"
 
     indent="yes"
-    
-    
 />
 
 <xsl:template match="/">
