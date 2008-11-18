@@ -244,6 +244,14 @@ __END__
 L<examples/rrd/> folder for examples how to create, update and graph C<mod_status>
 data using L<Data::Apache::mod_status> and rrdtool.
 
+=head1 DEBIAN
+
+    Build-Depends: debhelper (>= 5), libmodule-build-perl, libtest-differences-perl,
+     libtest-exception-perl, libfile-slurp-perl, tidy
+    Depends: ${perl:Depends}, ${misc:Depends}, libxml-libxslt-perl,
+     libdatetime-format-strptime-perl, libmoose-perl, libwww-perl, libcarp-clan-perl,
+     libxml-libxml-perl, libipc-run3-perl, libmoose-perl, tidy
+
 =head1 COPYRIGHT AND LICENSE
 
 This library is free software; you can redistribute it and/or modify
