@@ -16,7 +16,6 @@ use strict;
 our $VERSION = '0.01';
 
 use FindBin '$Bin';
-use File::Slurp;
 
 =head1 METHODS
 
@@ -74,6 +73,7 @@ __mod_status2xml_xslt__
 
     # if running tests, developing read the xslt from file located in the root in xslt/ folder
     if (not $mod_status_xslt) {
+        eval 'use File::Slurp;';
         $mod_status_xslt = read_file($Bin.'/../xslt/mod_status2xml.xslt');
     }
     

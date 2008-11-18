@@ -136,6 +136,7 @@ sub refresh {
     
     # make the mod_status page to xml transformation
     my $parser = XML::LibXML->new();
+    $parser->load_ext_dtd(0);    # we don't need them, can just slow thinks down
     my $xslt   = XML::LibXSLT->new();
     my $stylesheet = $xslt->parse_stylesheet(
         $parser->parse_string(Data::Apache::mod_status::2XML->xslt()),

@@ -24,12 +24,14 @@ my $builder = Module::Build->new(
     },
     build_requires => {
         'Test::More'        => 0,
-        'Test::More'        => 0,
         'Test::Differences' => 0,
         'Test::Exception'   => 0,
         'File::Slurp'       => 0,
         'File::Which'       => 0,
     },
+    script_files => [
+        'script/mod_status-info',
+    ],
     add_to_cleanup      => [ 'Data-Apache-mod_status-*' ],
     create_makefile_pl => 'traditional',
     create_readme       => 1,
