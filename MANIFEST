@@ -1,0 +1,17 @@
+Build.PL
+Changes
+examples/rrd/create
+examples/rrd/graph
+examples/rrd/update
+lib/Data/Apache/mod_status.pm
+lib/Data/Apache/mod_status/2XML.pm
+lib/Data/Apache/mod_status/Info.pm
+lib/Data/Apache/mod_status/Workers.pm
+Makefile.PL
+MANIFEST			This list of files
+META.yml
+README
+script/mod_status-info
+t/01_Data-Apache-mod_status.t
+t/data/server-status.html
+xslt/mod_status2xml.xslt
