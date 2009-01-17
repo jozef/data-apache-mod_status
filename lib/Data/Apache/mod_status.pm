@@ -130,8 +130,8 @@ sub refresh {
         '-i',
         '-f', '/dev/null',
     );
-    run3(\@tidy_cmd, \$mod_status_page, \$tidy_mod_status_page, undef, { 'return_if_system_error' => 1 });    
-    die 'execution of tidy failed (not installed?)'
+    eval { run3(\@tidy_cmd, \$mod_status_page, \$tidy_mod_status_page, undef, { 'return_if_system_error' => 1 }); };
+    die 'execution of tidy failed (not installed? `apt-get install tidy`)'
         if (($? >> 8) > 1);
     
     # make the mod_status page to xml transformation
