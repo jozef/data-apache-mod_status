@@ -32,3 +32,5 @@ examples/rrd/.*\.(rrd|png)
 
 Data-Apache-mod_status-.*\.tar\.gz
 
+^MYMETA\.yml$
+^MYMETA\.json$

@@ -7,6 +7,7 @@ my $builder = Module::Build->new(
     license             => 'perl',
     dist_author         => 'Jozef Kutej <jkutej@cpan.org>',
     dist_version_from   => 'lib/Data/Apache/mod_status.pm',
+    configure_requires  => { 'Module::Build' => 0.36 },
     requires => {
         'Getopt::Long'   => 0,
         'Pod::Usage'     => 0,
@@ -33,9 +34,7 @@ my $builder = Module::Build->new(
         'script/mod_status-info',
     ],
     add_to_cleanup      => [ 'Data-Apache-mod_status-*' ],
-    create_makefile_pl => 'traditional',
     create_readme       => 1,
-    sign                => 1,
 );
 
 $builder->create_build_script();

@@ -11,6 +11,8 @@ plan skip_all => "Test::Spelling required for testing POD spelling"
     if $@;
 
 add_stopwords(qw(
-	Jozef
+	Jozef Kutej
+	xml xslt
+	rrdtool
 ));
 all_pod_files_spelling_ok();

@@ -13,7 +13,7 @@ Data::Apache::mod_status::Info - information object
 use warnings;
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moose;
 use Moose::Util::TypeConstraints;

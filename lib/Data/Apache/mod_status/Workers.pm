@@ -13,7 +13,7 @@ Data::Apache::mod_status::Workes - workers summary object
 use warnings;
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -22,11 +22,11 @@ use Moose::Util::TypeConstraints;
 
 =cut
 
-subtype 'XML-LibXML-Element'
+subtype 'XML_LibXML_Element'
     => as 'Object'
     => where { $_[0]->isa('XML::LibXML::Element') };
 
-has 'workers_tag'  => ( 'is' => 'rw', 'isa' => 'XML-LibXML-Element', 'required' => 1 );
+has 'workers_tag'  => ( 'is' => 'rw', 'isa' => 'XML_LibXML_Element', 'required' => 1 );
 has 'waiting'      => ( 'is' => 'rw', 'isa' => 'Int', 'lazy' => 1, 'default' => sub { $_[0]->_update('waiting') });
 has 'starting'     => ( 'is' => 'rw', 'isa' => 'Int', 'lazy' => 1, 'default' => sub { $_[0]->_update('starting') });
 has 'reading'      => ( 'is' => 'rw', 'isa' => 'Int', 'lazy' => 1, 'default' => sub { $_[0]->_update('reading') });

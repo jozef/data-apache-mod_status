@@ -13,7 +13,7 @@ Data::Apache::mod_status::LinesXSLT - xslt to transform apache mod status page t
 use warnings;
 use strict;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use FindBin '$Bin';
 
